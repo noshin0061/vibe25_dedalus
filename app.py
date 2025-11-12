@@ -138,6 +138,12 @@ def _resolve_mcp_servers(response: Any, requested: List[str]) -> List[MCPServerR
     return resolved
 
 
+@app.get("/execute")
+async def execute_healthcheck() -> Dict[str, str]:
+    """Simple GET healthcheck for load balancers expecting 200 on /execute."""
+    return {"status": "ok"}
+
+
 @app.post("/execute", response_model=ExecuteResponse)
 async def execute(body: ExecuteRequest) -> ExecuteResponse:
     """Run a Dedalus unified execution for the provided input/model/server tuple."""
@@ -184,4 +190,3 @@ if __name__ == "__main__":
     #   -H "Content-Type: application/json" \
     #   -d '{"input":"Hello","model":"openai/gpt-5-mini","mcpServers":["windsor/exa-search-mcp"]}'
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=False)
-
